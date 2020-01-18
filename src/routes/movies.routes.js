@@ -13,6 +13,7 @@ const {
   addToWatchList,
   removeFromWatchList,
   getTopRated,
+  getRelated
 } = require('./../services/movies.service');
 
 router.get('/movies', async (req, res, next) => {
@@ -43,7 +44,13 @@ router.get('/movies/:id', async (req, res, next) => {
 });
 
 router.post('/movies/:id/related', async (req, res, next) => {
-  return [];
+  try {
+    let response = await getRelated(req.body.genres);
+    response = response.filter(movie => movie._id !== req.params.id);
+    return res.send(response);
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.post('/movies', authorizeRoles(ADMIN), async (req, res, next) => {

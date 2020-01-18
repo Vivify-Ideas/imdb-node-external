@@ -46,7 +46,7 @@ db.connect()
 app.listen(port, () => console.log(`App started successfully! Try it at http://localhost:${port}`));
 
 async function seedData() {
-  const { User, Roles, Genre } = require('./models');
+  const { User, Roles, Genre, Movie } = require('./models');
 
   let roles = await Roles.find().exec();
   if (!roles.length) {
@@ -72,6 +72,26 @@ async function seedData() {
       { email: 'regular@imdb.com', password: 'regularpass', name: 'Regular user', roles: [roles[1]] },
     ]) {
       await User.create(userData);
+    }
+  }
+
+  const movies = await Movie.find().exec();
+  if (!movies.length) {
+    let genres = await Genre.find().exec();
+    for (let movie of [
+      {
+        title: 'firstOne',
+        description: 'first one desc',
+        genres
+      },
+      {
+        title: 'secondOne',
+        description: 'second one desc',
+        genres
+      }
+
+    ]) {
+      await Movie.create(movie);
     }
   }
 

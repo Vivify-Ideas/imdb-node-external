@@ -158,6 +158,11 @@ const getTopRated = async () =>
     .limit(10)
     .exec();
 
+const getRelated = async genres => {
+  const relatedMovies = await Movie.find({ genres: { $in: genres } }).exec();
+  return relatedMovies;
+};
+
 module.exports = {
   index,
   show,
@@ -167,4 +172,5 @@ module.exports = {
   addToWatchList,
   removeFromWatchList,
   getTopRated,
+  getRelated,
 };
