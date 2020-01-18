@@ -164,7 +164,14 @@ const getRelated = async genres => {
 };
 
 const react = async ({ id, type }) => {
-  const movie = Movie.findByIdAndUpdate(id, type === "LIKE" ? { $inc: { likes: 1 } } : { $inc: { dislikes: 1 } } );
+  let movie = await Movie.findByIdAndUpdate(
+    id,
+    type === 'LIKE' ? { $inc: { likes: 1 } } : { $inc: { dislikes: 1 } },
+    {
+      returnNewDocument: true,
+    }
+  ).exec();
+  movie = await Movie.findById(id);
   return movie;
 };
 
