@@ -163,6 +163,11 @@ const getRelated = async genres => {
   return relatedMovies;
 };
 
+const react = async ({ id, type }) => {
+  const movie = Movie.findByIdAndUpdate(id, type === "LIKE" ? { $inc: { likes: 1 } } : { $inc: { dislikes: 1 } } );
+  return movie;
+};
+
 module.exports = {
   index,
   show,
@@ -173,4 +178,5 @@ module.exports = {
   removeFromWatchList,
   getTopRated,
   getRelated,
+  react,
 };

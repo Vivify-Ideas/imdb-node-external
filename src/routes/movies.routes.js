@@ -13,7 +13,8 @@ const {
   addToWatchList,
   removeFromWatchList,
   getTopRated,
-  getRelated
+  getRelated,
+  react,
 } = require('./../services/movies.service');
 
 router.get('/movies', async (req, res, next) => {
@@ -93,6 +94,15 @@ router.delete('/movies/:id', async (req, res, next) => {
   try {
     const response = await destroy(req.params.id);
     return res.send(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/movies/:id/react', async (req, res, next) => {
+  try {
+    const movie = await react({ id: req.params.id, type: req.body.reactionType });
+    return res.send(movie);
   } catch (err) {
     next(err);
   }
