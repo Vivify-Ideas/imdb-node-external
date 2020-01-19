@@ -33,7 +33,7 @@ app.use(
 
 app.use(authRoutes);
 app.use(roleRoutes);
-app.use(movieRoutes);
+app.use('/movies', movieRoutes);
 app.use(genreRoutes);
 app.use(commentRoutes);
 app.use(errorHandler);

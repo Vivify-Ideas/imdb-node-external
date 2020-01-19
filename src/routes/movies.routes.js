@@ -17,7 +17,7 @@ const {
   react,
 } = require('./../services/movies.service');
 
-router.get('/movies', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const response = await index(req.query);
     return res.send(response);
@@ -26,7 +26,7 @@ router.get('/movies', async (req, res, next) => {
   }
 });
 
-router.get('/movies/top-rated', async (req, res, next) => {
+router.get('/top-rated', async (req, res, next) => {
   try {
     const response = await getTopRated(req.query);
     return res.send(response);
@@ -35,7 +35,7 @@ router.get('/movies/top-rated', async (req, res, next) => {
   }
 });
 
-router.get('/movies/:id', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const response = await show(req.params.id);
     return res.send(response);
@@ -44,7 +44,7 @@ router.get('/movies/:id', async (req, res, next) => {
   }
 });
 
-router.post('/movies/:id/related', async (req, res, next) => {
+router.post('/:id/related', async (req, res, next) => {
   try {
     let response = await getRelated(req.body.genres, req.params.id);
     response = response.filter(movie => movie._id !== req.params.id);
@@ -54,7 +54,7 @@ router.post('/movies/:id/related', async (req, res, next) => {
   }
 });
 
-router.post('/movies', authorizeRoles(ADMIN), async (req, res, next) => {
+router.post('/', authorizeRoles(ADMIN), async (req, res, next) => {
   try {
     const response = await store(req.body);
     return res.send(response);
@@ -63,7 +63,7 @@ router.post('/movies', authorizeRoles(ADMIN), async (req, res, next) => {
   }
 });
 
-router.post('/movies/:id/watch', async (req, res, next) => {
+router.post('/:id/watch', async (req, res, next) => {
   try {
     const response = await addToWatchList(req.params.id, req.user);
     return res.send(response);
@@ -72,7 +72,7 @@ router.post('/movies/:id/watch', async (req, res, next) => {
   }
 });
 
-router.put('/movies/:id', authorizeRoles(ADMIN), async (req, res, next) => {
+router.put('/:id', authorizeRoles(ADMIN), async (req, res, next) => {
   try {
     const response = await update(req.params.id, req.body);
     return res.send(response);
@@ -81,7 +81,7 @@ router.put('/movies/:id', authorizeRoles(ADMIN), async (req, res, next) => {
   }
 });
 
-router.delete('/movies/:id/watch', async (req, res, next) => {
+router.delete('/:id/watch', async (req, res, next) => {
   try {
     const response = await removeFromWatchList(req.params.id, req.user);
     return res.send(response);
@@ -90,7 +90,7 @@ router.delete('/movies/:id/watch', async (req, res, next) => {
   }
 });
 
-router.delete('/movies/:id', async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const response = await destroy(req.params.id);
     return res.send(response);
@@ -99,7 +99,7 @@ router.delete('/movies/:id', async (req, res, next) => {
   }
 });
 
-router.put('/movies/:id/react', async (req, res, next) => {
+router.put('/:id/react', async (req, res, next) => {
   try {
     const movie = await react({
       movieId: req.params.id,
