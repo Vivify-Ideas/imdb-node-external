@@ -163,8 +163,33 @@ const getRelated = async genres => {
   return relatedMovies;
 };
 
-const react = async ({ movieId, userId, type }) => {
+const didVote = async (movieId, userId, type) => {
+  if (type === 'LIKE') {
+    const movie = await Movie.findOne({ likes: { $in: userId } });
+    console.log('--------------- movie found', movie);
+    if (movie) return true;
+    return false;
+  }
+  const movie = await Movie.findOne({ dislikes: { $in: userId } });
+  if (movie) return true;
+  return false;
+};
 
+const react = async ({ movieId, userId, type }) => {
+  const vote = await didVote(movieId, userId, type);
+  console.log(vote);
+  if (vote) {
+    let movie = await Movie.findByIdAndUpdate(
+      movieId,
+      type === 'LIKE' ? { $pull: { likes: userId } } : { $pull: { dislikes: userId } },
+      {
+        returnNewDocument: true,
+      }
+    ).exec();
+    movie = await Movie.findById(movieId);
+    console.log(movie);
+    return movie;
+  }
   let movie = await Movie.findByIdAndUpdate(
     movieId,
     type === 'LIKE' ? { $push: { likes: userId } } : { $push: { dislikes: userId } },
@@ -173,6 +198,7 @@ const react = async ({ movieId, userId, type }) => {
     }
   ).exec();
   movie = await Movie.findById(movieId);
+  console.log(movie);
   return movie;
 };
 
