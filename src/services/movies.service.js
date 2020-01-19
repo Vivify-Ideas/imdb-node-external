@@ -166,7 +166,7 @@ const getRelated = async genres => {
 const react = async ({ id, type }) => {
   let movie = await Movie.findByIdAndUpdate(
     id,
-    type === 'LIKE' ? { $inc: { likes: 1 } } : { $inc: { dislikes: 1 } },
+    type === 'LIKE' ? { $push: { likes: id } } : { $push: { dislikes: id } },
     {
       returnNewDocument: true,
     }

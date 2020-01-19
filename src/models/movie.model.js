@@ -11,14 +11,20 @@ const movieSchema = new Schema({
     type: String,
     required: true,
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
-  dislikes: {
-    type: Number,
-    default: 0,
-  },
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      default: 0,
+    },
+  ],
+  dislikes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      default: 0,
+    },
+  ],
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   genres: [{ type: Schema.Types.ObjectId, ref: 'Genre' }],
   visits: {
@@ -26,6 +32,10 @@ const movieSchema = new Schema({
     default: 0,
   },
   imageUrl: String,
+});
+
+movieSchema.set('toJSON', { 
+  transform: (doc, ret) => ({ ...ret, likes: ret.likes.length, dislikes: ret.dislikes.length }),
 });
 
 const Movie = mongoose.model('Movie', movieSchema);
