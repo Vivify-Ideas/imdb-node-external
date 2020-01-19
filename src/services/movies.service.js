@@ -46,7 +46,7 @@ const queryBuilder = queryParamObject => {
 
   return Object.keys(queryParamObject).reduce(
     (acc, key) => ({ ...acc, [key]: fieldOptionMapper(key, query[key]) }),
-    {},
+    {}
   );
 };
 
@@ -58,7 +58,7 @@ const show = async id => {
     const movie = await Movie.findByIdAndUpdate(
       id,
       { $inc: { visits: 1 } },
-      { upsert: true, new: true },
+      { upsert: true, new: true }
     ).populate('genres');
     if (!movie) {
       throw new HttpError(400, 'No movie with that id');
@@ -163,30 +163,37 @@ const getRelated = async genres => {
   return relatedMovies;
 };
 
-const didVote = async (movieId, userId, type) => {
-  if (type === 'LIKE') {
-    const movie = await Movie.findOne({ likes: { $in: userId } });
-    console.log('--------------- movie found', movie);
-    if (movie) return true;
-  }
-  const movie = await Movie.findOne({ dislikes: { $in: userId } });
-  if (movie) return true;
-  return false;
+const didVote = async (movieId, userId) => {
+  let movie = await Movie.findOne({ likes: { $in: userId } });
+  if (movie) return { bool: true, in: 'LIKE' };
+  movie = await Movie.findOne({ dislikes: { $in: userId } });
+  if (movie) return { bool: true, in: 'DISLIKE' };
+  return { bool: false, in: 'none' };
 };
 
 const react = async ({ movieId, userId, type }) => {
-  const vote = await didVote(movieId, userId, type);
+  const vote = await didVote(movieId, userId);
   console.log(vote);
-  if (vote) {
+  if (vote.bool) {
+    if (type === vote.in) {
+      let movie = await Movie.findByIdAndUpdate(
+        movieId,
+        type === 'LIKE' ? { $pull: { likes: userId } } : { $pull: { dislikes: userId } },
+        {
+          returnNewDocument: true,
+        },
+      ).exec();
+      movie = await Movie.findById(movieId);
+      return movie;
+    }
     let movie = await Movie.findByIdAndUpdate(
       movieId,
-      type === 'LIKE' ? { $pull: { likes: userId } } : { $pull: { dislikes: userId } },
+      type === 'LIKE' ? { $pull: { dislikes: userId } } : { $pull: { likes: userId } },
       {
         returnNewDocument: true,
-      }
+      },
     ).exec();
     movie = await Movie.findById(movieId);
-    console.log(movie);
     return movie;
   }
   let movie = await Movie.findByIdAndUpdate(
@@ -194,10 +201,9 @@ const react = async ({ movieId, userId, type }) => {
     type === 'LIKE' ? { $push: { likes: userId } } : { $push: { dislikes: userId } },
     {
       returnNewDocument: true,
-    }
+    },
   ).exec();
   movie = await Movie.findById(movieId);
-  console.log(movie);
   return movie;
 };
 
