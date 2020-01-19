@@ -177,7 +177,6 @@ const didVote = async (movieId, userId) => {
 
 const react = async ({ movieId, userId, type }) => {
   const vote = await didVote(movieId, userId);
-  console.log(vote);
   if (vote.bool) {
     if (type === vote.in) {
       let movie = await Movie.findByIdAndUpdate(
