@@ -46,7 +46,7 @@ router.get('/movies/:id', async (req, res, next) => {
 
 router.post('/movies/:id/related', async (req, res, next) => {
   try {
-    let response = await getRelated(req.body.genres);
+    let response = await getRelated(req.body.genres, req.params.id);
     response = response.filter(movie => movie._id !== req.params.id);
     return res.send(response);
   } catch (err) {

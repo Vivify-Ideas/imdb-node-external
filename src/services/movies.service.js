@@ -158,9 +158,13 @@ const getTopRated = async () =>
     .limit(10)
     .exec();
 
-const getRelated = async genres => {
+const getRelated = async (genres, movieId) => {
   const relatedMovies = await Movie.find({ genres: { $in: genres } }).exec();
-  return relatedMovies;
+  return relatedMovies.reduce((acc, cur) => {
+    if (cur._id == movieId) return acc;
+    acc.push(cur);
+    return acc;
+  }, []);
 };
 
 const didVote = async (movieId, userId) => {
