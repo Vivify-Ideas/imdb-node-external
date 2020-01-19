@@ -101,7 +101,11 @@ router.delete('/movies/:id', async (req, res, next) => {
 
 router.put('/movies/:id/react', async (req, res, next) => {
   try {
-    const movie = await react({ id: req.params.id, type: req.body.reactionType });
+    const movie = await react({
+      movieId: req.params.id,
+      userId: req.body.userId,
+      type: req.body.reactionType,
+    });
     return res.send(movie);
   } catch (err) {
     next(err);
