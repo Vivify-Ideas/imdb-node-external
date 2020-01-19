@@ -77,17 +77,17 @@ async function seedData() {
 
   const movies = await Movie.find().exec();
   if (!movies.length) {
-    let genres = await Genre.find().exec();
+    let allGenres = await Genre.find().exec();
     for (let movie of [
       {
         title: 'firstOne',
         description: 'first one desc',
-        genres
+        allGenres
       },
       {
         title: 'secondOne',
         description: 'second one desc',
-        genres
+        allGenres
       }
 
     ]) {
