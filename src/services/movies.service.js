@@ -168,7 +168,6 @@ const didVote = async (movieId, userId, type) => {
     const movie = await Movie.findOne({ likes: { $in: userId } });
     console.log('--------------- movie found', movie);
     if (movie) return true;
-    return false;
   }
   const movie = await Movie.findOne({ dislikes: { $in: userId } });
   if (movie) return true;
