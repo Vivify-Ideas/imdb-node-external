@@ -82,14 +82,18 @@ async function seedData() {
       {
         title: 'firstOne',
         description: 'first one desc',
-        allGenres
+        genres: allGenres
       },
       {
         title: 'secondOne',
         description: 'second one desc',
-        allGenres
+        genres: allGenres
+      },
+      {
+        title: 'thirdOne',
+        description: 'third one desc',
+        genres: allGenres
       }
-
     ]) {
       await Movie.create(movie);
     }
