@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 
 const jwtAuth = expressJwt({
   secret: process.env.JWT_SECRET,
+  algorithms: ['HS256']
 }).unless({ path: ['/auth/register', '/auth/login', '/auth/google-login'] });
 
 app.use(jwtAuth);
